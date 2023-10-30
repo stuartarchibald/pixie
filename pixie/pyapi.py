@@ -135,3 +135,158 @@ class RawPyAPI(object):
         PyUnicode_AsUTF8AndSize_fn = ir.Function(llvm_module, *args)
         PyUnicode_AsUTF8AndSize_fn.linkage = 'external'
         return PyUnicode_AsUTF8AndSize_fn
+
+    @classmethod
+    def _PyTuple_Resize(self, llvm_module):
+        def _PyTuple_Resize_sig_type():
+            signature = ir.FunctionType(lt._int32,
+                                        # void(pyobject**, py_ssize_t)
+                                        (lt._pyobject_head_p.as_pointer(),
+                                         lt._llvm_py_ssize_t,),)
+            name = "_PyTuple_Resize"
+            return signature, name
+        args = _PyTuple_Resize_sig_type()
+        _PyTuple_Resize_fn = ir.Function(llvm_module, *args)
+        _PyTuple_Resize_fn.linkage = 'external'
+        return _PyTuple_Resize_fn
+
+    @classmethod
+    def PyTuple_Size(self, llvm_module):
+        def PyTuple_Size_sig_type():
+            signature = ir.FunctionType(lt._llvm_py_ssize_t,
+                                        # py_ssize_t(pyobject*)
+                                        (lt._pyobject_head_p,),)
+            name = "PyTuple_Size"
+            return signature, name
+        args = PyTuple_Size_sig_type()
+        PyTuple_Size_fn = ir.Function(llvm_module, *args)
+        PyTuple_Size_fn.linkage = 'external'
+        return PyTuple_Size_fn
+
+    @classmethod
+    def Py_IncRef(self, llvm_module):
+        def Py_IncRef_sig_type():
+            signature = ir.FunctionType(ir.VoidType(),
+                                        # pyobj *
+                                        (lt._pyobject_head_p,),)
+            name = "Py_IncRef"
+            return signature, name
+        args = Py_IncRef_sig_type()
+        Py_IncRef_fn = ir.Function(llvm_module, *args)
+        Py_IncRef_fn.linkage = 'external'
+        return Py_IncRef_fn
+
+    @classmethod
+    def PyDict_New(self, llvm_module):
+        def _PyDict_New_sig_type():
+            signature = ir.FunctionType(lt._pyobject_head_p,
+                                        # pyobject(void)
+                                        (),)
+            name = "PyDict_New"
+            return signature, name
+        args = _PyDict_New_sig_type()
+        _PyDict_New_fn = ir.Function(llvm_module, *args)
+        _PyDict_New_fn.linkage = 'external'
+        return _PyDict_New_fn
+
+    @classmethod
+    def PyTuple_New(self, llvm_module):
+        def _PyTuple_New_sig_type():
+            signature = ir.FunctionType(lt._pyobject_head_p,
+                                        # pyobject(py_ssize_t)
+                                        (lt._llvm_py_ssize_t,),)
+            name = "PyTuple_New"
+            return signature, name
+        args = _PyTuple_New_sig_type()
+        _PyTuple_New_fn = ir.Function(llvm_module, *args)
+        _PyTuple_New_fn.linkage = 'external'
+        return _PyTuple_New_fn
+
+    @classmethod
+    def PyTuple_SetItem(self, llvm_module):
+        def _PyTuple_SetItem_sig_type():
+            signature = ir.FunctionType(lt._int32,
+                                        # void(pyobject*, py_ssize_t, pyobject*)
+                                        (lt._pyobject_head_p,
+                                         lt._llvm_py_ssize_t,
+                                         lt._pyobject_head_p),)
+            name = "PyTuple_SetItem"
+            return signature, name
+        args = _PyTuple_SetItem_sig_type()
+        _PyTuple_SetItem_fn = ir.Function(llvm_module, *args)
+        _PyTuple_SetItem_fn.linkage = 'external'
+        return _PyTuple_SetItem_fn
+
+    @classmethod
+    def PyTuple_GetItem(self, llvm_module):
+        def _PyTuple_GetItem_sig_type():
+            signature = ir.FunctionType(lt._pyobject_head_p,
+                                        # void(pyobject*, py_ssize_t)
+                                        (lt._pyobject_head_p,
+                                         lt._llvm_py_ssize_t,),)
+            name = "PyTuple_GetItem"
+            return signature, name
+        args = _PyTuple_GetItem_sig_type()
+        _PyTuple_GetItem_fn = ir.Function(llvm_module, *args)
+        _PyTuple_GetItem_fn.linkage = 'external'
+        return _PyTuple_GetItem_fn
+
+    @classmethod
+    def _PyEval_RequestCodeExtraIndex(self, llvm_module):
+        def _PyEval_RequestCodeExtraIndex_sig_type():
+            # This function takes a freefunc, which is:
+            # `void (*freefunc)(void*)`
+            freefunc = ir.FunctionType(ir.VoidType(), (lt._void_star,))
+            signature = ir.FunctionType(lt._int32,
+                                        # pyobj *
+                                        (freefunc.as_pointer(),),)
+            name = "_PyEval_RequestCodeExtraIndex"
+            return signature, name
+        args = _PyEval_RequestCodeExtraIndex_sig_type()
+        _PyEval_RequestCodeExtraIndex_fn = ir.Function(llvm_module, *args)
+        _PyEval_RequestCodeExtraIndex_fn.linkage = 'external'
+        return _PyEval_RequestCodeExtraIndex_fn
+
+    @classmethod
+    def _PyCode_GetExtra(self, llvm_module):
+        def __PyCode_GetExtra_sig_type():
+            signature = ir.FunctionType(lt._int32,
+                                        # (pyobject *, py_ssize_t, void **)
+                                        (lt._pyobject_head_p,
+                                         lt._llvm_py_ssize_t,
+                                         lt._void_star.as_pointer()),)
+            name = "_PyCode_GetExtra"
+            return signature, name
+        args = __PyCode_GetExtra_sig_type()
+        __PyCode_GetExtra_fn = ir.Function(llvm_module, *args)
+        __PyCode_GetExtra_fn.linkage = 'external'
+        return __PyCode_GetExtra_fn
+
+    @classmethod
+    def _PyCode_SetExtra(self, llvm_module):
+        def __PyCode_SetExtra_sig_type():
+            signature = ir.FunctionType(lt._int32,
+                                        # (pyobject *, py_ssize_t, void *)
+                                        (lt._pyobject_head_p,
+                                         lt._llvm_py_ssize_t,
+                                         lt._void_star),)
+            name = "_PyCode_SetExtra"
+            return signature, name
+        args = __PyCode_SetExtra_sig_type()
+        __PyCode_SetExtra_fn = ir.Function(llvm_module, *args)
+        __PyCode_SetExtra_fn.linkage = 'external'
+        return __PyCode_SetExtra_fn
+
+    @classmethod
+    def PyErr_SetString(self, llvm_module):
+        def _PyErr_SetString_sig_type():
+            signature = ir.FunctionType(ir.VoidType(),
+                                        # (pyobject *, char *)
+                                        (lt._pyobject_head_p,
+                                         lt._char_star,),)
+            name = "PyErr_SetString"
+            return signature, name
+        args = _PyErr_SetString_sig_type()
+        _PyErr_SetString_fn = ir.Function(llvm_module, *args)
+        _PyErr_SetString_fn.linkage = 'external'
+        return _PyErr_SetString_fn
