@@ -170,6 +170,9 @@ class Toolchain(object):
             # as the MSVC compiler would implicitly do.
             # (XXX msvcrtd in pydebug mode?)
             libs = libs + ['msvcrt']
+        else:
+            libs = libs + ['rt', 'dl']
+
         return libs
 
     def get_python_library_dirs(self):
