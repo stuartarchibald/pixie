@@ -285,20 +285,17 @@ class x86CPUSelector(Selector):
             fty = ir.FunctionType(ir.LiteralStructType([i32, i32, i32, i32]),
                                   (i32, i32))
 
-            # TODO: Fix/investigate this...
-            # This is supposed be the thing to do for PIC and should be the
-            # equivalent to the following inline asm in C, however, it seemingly
-            # causes segfaults.
             "xchg{l}\t{%%}ebx, %1\n\t"
             "cpuid\n\t"
             "xchg{l}\t{%%}ebx, %1\n\t"
+            # The following is variant for i386 + PIC:
             # asm_str = ("xchg$(l$)\t$(%$)ebx, $1\n\t"
             #            "cpuid\n\t"
             #            "xchg$(l$)\t$(%$)ebx, $1\n\t")
             # reg_info = ("={ax},=r,={cx},={dx},{ax},{cx},"
             #             "~{dirflag},~{fpsr},~{flags}")
             #
-            # This is the non-PIC version, which seems to work ok.
+            # This is the 64-bit or non-PIC version
             asm_str = "cpuid\n\t"
             reg_info = ("={ax},={bx},={cx},={dx},{ax},{cx},"
                         "~{dirflag},~{fpsr},~{flags}")
