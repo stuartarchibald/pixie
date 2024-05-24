@@ -164,7 +164,7 @@ class Toolchain(object):
         """
         Get the library arguments necessary to link with Python.
         """
-        libs = self._build_ext.get_libraries(_DummyExtension())
+        libs = list(self._build_ext.get_libraries(_DummyExtension()))
         if sys.platform == 'win32':
             # Under Windows, need to link explicitly against the CRT,
             # as the MSVC compiler would implicitly do.
